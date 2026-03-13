@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Nurse Alert System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<h2>Upload Patient Record</h2>
+
+<input type="file" id="fileInput">
+<br><br>
+
+<button onclick="uploadFile()">Upload</button>
+
+<div id="resultBox">
+
+<h3>Full JSON Result</h3>
+<pre id="result"></pre>
+
+<p><b>Extracted Text:</b></p>
+<pre id="textOutput"></pre>
+
+<p><b>Nurse Alerts:</b></p>
+<pre id="alertOutput"></pre>
+
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>

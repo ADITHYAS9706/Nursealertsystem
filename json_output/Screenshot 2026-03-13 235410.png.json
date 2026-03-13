@@ -1,0 +1,248 @@
+{
+    "file_uploaded": "Screenshot 2026-03-13 235410.png",
+    "extracted_text": "DRUG CHART (1)\nAllergies (if any)\nNOLEg\nDiagnosis\n2PM\nWeight\nRegular Prescription\n03\n04\nD5\n06\n07\nDrug\nDose\nRoute\nFreq\nDate\n8/2(2 6\nDoctor'$ signature\nDrug\n1]\nDose\n(amp\nRoute\nTU\nFreq\nDate\n98/2/26\nDoctor' s signature\n",
+    "alerts": {
+        "alerts": [
+            {
+                "drug_name": "DRUG",
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": "Allergies",
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": "NOLEg",
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": "Diagnosis",
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": "PM",
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": "Weight",
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": "Regular",
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": null,
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": null,
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": "D",
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": null,
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": null,
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": "Drug",
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": "Dose",
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": "Route",
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": "Freq",
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": "Date",
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": null,
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": "Doctor",
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": "Drug",
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": null,
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": "Dose",
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": "amp",
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": "Route",
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": "TU",
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": "Freq",
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": "Date",
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": null,
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": "Doctor",
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": null,
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            }
+        ]
+    }
+}

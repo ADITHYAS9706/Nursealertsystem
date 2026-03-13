@@ -1,0 +1,154 @@
+{
+    "file": "Screenshot 2026-03-13 160706.png",
+    "extracted_text": "NURSING DOCUMENTATION\n(From_\nto\nDate:\n27\n22\n40\naud\nI\n69\nhBusly\ndufyt\nnd\n@RBS\n",
+    "alerts": {
+        "alerts": [
+            {
+                "drug_name": "NURSING",
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": "From",
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": "to",
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": "Date",
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": null,
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": null,
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": null,
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": "aud",
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": "I",
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": null,
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": "hBusly",
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": "dufyt",
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": "nd",
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": "RBS",
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            },
+            {
+                "drug_name": null,
+                "dosage": null,
+                "route": null,
+                "frequency": null,
+                "duration_days": null,
+                "alert_times": []
+            }
+        ]
+    },
+    "mrd_report": [
+        {
+            "item": "patient_name",
+            "status": "Missing"
+        },
+        {
+            "item": "patient_id",
+            "status": "Missing"
+        },
+        {
+            "item": "date",
+            "status": "Present"
+        },
+        {
+            "item": "diagnosis",
+            "status": "Missing"
+        },
+        {
+            "item": "doctor_signature",
+            "status": "Missing"
+        },
+        {
+            "item": "drug_chart",
+            "status": "Missing"
+        }
+    ]
+}
