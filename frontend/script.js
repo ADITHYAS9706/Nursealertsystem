@@ -371,132 +371,290 @@ function makeDemoData(fname) {
     ]
   };
 }
-
 /* ════════════════════════════════
    CANVAS RX PAD
 ════════════════════════════════ */
+
 const canvas = document.getElementById('pad');
-const ctx    = canvas.getContext('2d');
-let drawing = false, tool = 'pen', penSize = 1.5;
-let hist = [], redoSt = [], lastX = 0, lastY = 0;
+const ctx = canvas.getContext('2d');
+
+let drawing = false;
+let tool = 'pen';
+let penSize = 1.5;
+
+let hist = [];
+let redoSt = [];
+
+let lastX = 0;
+let lastY = 0;
+
 let padHasContent = false;
 
+
+/* ───────── CANVAS INIT ───────── */
 function initCanvas() {
-  const dpr  = window.devicePixelRatio || 1;
+
+  const dpr = window.devicePixelRatio || 1;
   const rect = canvas.getBoundingClientRect();
-  canvas.width  = rect.width  * dpr;
+
+  canvas.width = rect.width * dpr;
   canvas.height = rect.height * dpr;
+
   ctx.scale(dpr, dpr);
-  ctx.lineCap = ctx.lineJoin = 'round';
+
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+
+  /* IMPORTANT */
+  ctx.globalCompositeOperation = "source-over";
 }
 
-window.addEventListener('load', () => { initCanvas(); });
-window.addEventListener('resize', () => {
+window.addEventListener("load", initCanvas);
+
+
+/* ───────── RESIZE HANDLING ───────── */
+window.addEventListener("resize", () => {
+
   const saved = canvas.toDataURL();
+
   initCanvas();
+
   if (padHasContent) {
+
     const img = new Image();
-    img.onload = () => ctx.drawImage(img, 0, 0, canvas.getBoundingClientRect().width, canvas.getBoundingClientRect().height);
+
+    img.onload = () => ctx.drawImage(
+      img,
+      0,
+      0,
+      canvas.getBoundingClientRect().width,
+      canvas.getBoundingClientRect().height
+    );
+
     img.src = saved;
   }
+
 });
 
+
+/* ───────── POSITION HELPERS ───────── */
 function pos(e) {
+
   const r = canvas.getBoundingClientRect();
-  return { x: e.clientX - r.left, y: e.clientY - r.top };
+
+  return {
+    x: e.clientX - r.left,
+    y: e.clientY - r.top
+  };
+
 }
+
 function tpos(e) {
+
   const r = canvas.getBoundingClientRect();
-  return { x: e.touches[0].clientX - r.left, y: e.touches[0].clientY - r.top };
+
+  return {
+    x: e.touches[0].clientX - r.left,
+    y: e.touches[0].clientY - r.top
+  };
+
 }
 
-canvas.addEventListener('mousedown',  e => { startDraw(pos(e)); });
-canvas.addEventListener('mousemove',  e => { if (drawing) moveDraw(pos(e)); });
-canvas.addEventListener('mouseup',    () => endDraw());
-canvas.addEventListener('mouseleave', () => endDraw());
-canvas.addEventListener('touchstart', e => { e.preventDefault(); startDraw(tpos(e)); }, {passive:false});
-canvas.addEventListener('touchmove',  e => { e.preventDefault(); if (drawing) moveDraw(tpos(e)); }, {passive:false});
-canvas.addEventListener('touchend',   () => endDraw());
 
+/* ───────── EVENTS ───────── */
+canvas.addEventListener("mousedown", e => startDraw(pos(e)));
+canvas.addEventListener("mousemove", e => drawing && moveDraw(pos(e)));
+canvas.addEventListener("mouseup", endDraw);
+canvas.addEventListener("mouseleave", endDraw);
+
+canvas.addEventListener("touchstart", e => {
+  e.preventDefault();
+  startDraw(tpos(e));
+}, { passive:false });
+
+canvas.addEventListener("touchmove", e => {
+  e.preventDefault();
+  drawing && moveDraw(tpos(e));
+}, { passive:false });
+
+canvas.addEventListener("touchend", endDraw);
+
+
+/* ───────── DRAW START ───────── */
 function startDraw(p) {
-  drawing = true; lastX = p.x; lastY = p.y;
-  ctx.beginPath(); ctx.moveTo(p.x, p.y);
-  padHasContent = true;
-  document.getElementById('padWm').style.opacity = '0';
-}
-function moveDraw(p) {
-  const color = document.getElementById('penColor').value;
-  if (tool === 'eraser') {
-    ctx.clearRect(p.x - 15, p.y - 15, 30, 30);
-  } else {
-    ctx.strokeStyle = color;
-    ctx.lineWidth   = penSize;
-    const mx = (lastX + p.x) / 2, my = (lastY + p.y) / 2;
-    ctx.beginPath();
-    ctx.moveTo(lastX, lastY);
-    ctx.quadraticCurveTo(lastX, lastY, mx, my);
-    ctx.stroke();
-  }
-  lastX = p.x; lastY = p.y;
-}
-function endDraw() {
-  if (!drawing) return;
-  drawing = false;
+
+  drawing = true;
+
+  lastX = p.x;
+  lastY = p.y;
+
   ctx.beginPath();
+  ctx.moveTo(lastX, lastY);
+
+  padHasContent = true;
+
+  document.getElementById("padWm").style.opacity = "0";
+}
+
+
+function moveDraw(p) {
+
+  const color = document.getElementById("penColor").value;
+
+  if (tool === "eraser") {
+
+    ctx.globalCompositeOperation = "destination-out";
+    ctx.lineWidth = 25;
+
+  } else {
+
+    ctx.globalCompositeOperation = "source-over";
+    ctx.strokeStyle = color;
+    ctx.lineWidth = penSize;
+
+  }
+
+  ctx.lineTo(p.x, p.y);
+  ctx.stroke();
+
+  lastX = p.x;
+  lastY = p.y;
+
+}
+
+
+/* ───────── DRAW END ───────── */
+function endDraw() {
+
+  if (!drawing) return;
+
+  drawing = false;
+
+  ctx.closePath();
+
   hist.push(canvas.toDataURL());
   redoSt = [];
+
 }
 
+/* ───────── UNDO / REDO ───────── */
 function undo() {
+
   if (!hist.length) return;
+
   redoSt.push(hist.pop());
-  restoreCanvas(hist[hist.length-1]);
+
+  restoreCanvas(hist[hist.length - 1]);
+
 }
+
 function redo() {
+
   if (!redoSt.length) return;
+
   const s = redoSt.pop();
-  hist.push(s); restoreCanvas(s);
+
+  hist.push(s);
+
+  restoreCanvas(s);
+
 }
+
+
+/* ───────── RESTORE CANVAS ───────── */
 function restoreCanvas(src) {
+
   const rect = canvas.getBoundingClientRect();
+
   ctx.clearRect(0, 0, rect.width, rect.height);
-  if (!src) { padHasContent = false; document.getElementById('padWm').style.opacity = '1'; return; }
+
+  if (!src) {
+
+    padHasContent = false;
+
+    document.getElementById("padWm").style.opacity = "1";
+
+    return;
+  }
+
   const img = new Image();
+
   img.onload = () => ctx.drawImage(img, 0, 0, rect.width, rect.height);
+
   img.src = src;
+
 }
+
+
+/* ───────── CLEAR PAD ───────── */
 function clearPad() {
+
   const r = canvas.getBoundingClientRect();
+
   ctx.clearRect(0, 0, r.width, r.height);
-  hist = []; redoSt = []; padHasContent = false;
-  document.getElementById('padWm').style.opacity = '1';
-  document.getElementById('padPanel').style.display = 'none';
+
+  hist = [];
+  redoSt = [];
+
+  padHasContent = false;
+
+  document.getElementById("padWm").style.opacity = "1";
+
+  document.getElementById("padPanel").style.display = "none";
+
 }
 
+
+/* ───────── TOOL SWITCH ───────── */
 function setTool(t) {
+
   tool = t;
-  document.getElementById('tbPen').classList.toggle('active', t === 'pen');
-  document.getElementById('tbEraser').classList.toggle('active', t === 'eraser');
-  canvas.style.cursor = t === 'eraser' ? 'cell' : 'crosshair';
+
+  document.getElementById("tbPen").classList.toggle("active", t === "pen");
+  document.getElementById("tbEraser").classList.toggle("active", t === "eraser");
+
+  canvas.style.cursor = t === "eraser" ? "cell" : "crosshair";
+
 }
+
+
+/* ───────── PEN SIZE ───────── */
 function setSize(btn) {
+
   penSize = parseFloat(btn.dataset.sz);
-  document.querySelectorAll('.szb').forEach(b => b.classList.remove('act'));
-  btn.classList.add('act');
+
+  document.querySelectorAll(".szb").forEach(b => b.classList.remove("act"));
+
+  btn.classList.add("act");
+
 }
 
-document.getElementById('penColor').addEventListener('input', function() {
-  document.getElementById('clrSw').style.background = this.value;
+
+/* ───────── COLOR PICKER ───────── */
+document.getElementById("penColor").addEventListener("input", function () {
+
+  document.getElementById("clrSw").style.background = this.value;
+
 });
-document.getElementById('clrSw').style.background = document.getElementById('penColor').value;
 
+document.getElementById("clrSw").style.background =
+  document.getElementById("penColor").value;
+
+
+/* ───────── FULLSCREEN ───────── */
 function toggleFS() {
-  const pc = document.getElementById('padContainer');
-  pc.classList.toggle('fs');
-  const icon = pc.classList.contains('fs') ? '⊠' : '';
-  document.getElementById('fsBtn').title = pc.classList.contains('fs') ? 'Exit Fullscreen' : 'Fullscreen';
+
+  const pc = document.getElementById("padContainer");
+
+  pc.classList.toggle("fs");
+
+  document.getElementById("fsBtn").title =
+    pc.classList.contains("fs") ? "Exit Fullscreen" : "Fullscreen";
+
   setTimeout(initCanvas, 60);
+
 }
+
 
 /* ════════════════════════════════
    EXTRACT FROM PAD

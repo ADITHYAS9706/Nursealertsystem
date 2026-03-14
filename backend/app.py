@@ -1,12 +1,6 @@
 """
 RxSense — Nurse Alert System
 FastAPI Backend
-
-Run:
-uvicorn app:app --reload
-
-Docs:
-http://127.0.0.1:8000/docs
 """
 
 from fastapi import FastAPI, UploadFile, File, HTTPException
@@ -22,7 +16,7 @@ from nursing_alerts import generate_alerts
 
 
 # ─────────────────────────────
-# App
+# Create FastAPI App
 # ─────────────────────────────
 app = FastAPI(
     title="RxSense API",
@@ -32,7 +26,7 @@ app = FastAPI(
 
 
 # ─────────────────────────────
-# CORS
+# Enable CORS
 # ─────────────────────────────
 app.add_middleware(
     CORSMiddleware,
@@ -55,9 +49,6 @@ UPLOADS.mkdir(exist_ok=True)
 OUTPUTS.mkdir(exist_ok=True)
 
 
-# ─────────────────────────────
-# Config
-# ─────────────────────────────
 ALLOWED_TYPES = {
     "image/jpeg",
     "image/png",
@@ -65,63 +56,48 @@ ALLOWED_TYPES = {
     "application/pdf"
 }
 
-MAX_SIZE_MB = 20
-
 
 # ─────────────────────────────
-# Routes
+# Root API
 # ─────────────────────────────
-
-@app.get("/", tags=["Health"])
+@app.get("/")
 def root():
     return {
         "status": "ok",
-        "service": "RxSense API v2.0",
+        "service": "RxSense API",
         "docs": "/docs"
     }
-
-
-@app.get("/health", tags=["Health"])
-def health():
-    return {"status": "healthy"}
 
 
 # ─────────────────────────────
 # Upload Prescription
 # ─────────────────────────────
-@app.post("/upload", tags=["Prescription"])
+@app.post("/upload")
 async def upload(file: UploadFile = File(...)):
 
     if not file:
         raise HTTPException(400, "No file uploaded")
 
-    # Validate file type
-    if file.content_type and file.content_type not in ALLOWED_TYPES:
-        raise HTTPException(400, f"Unsupported file type: {file.content_type}")
+    if file.content_type not in ALLOWED_TYPES:
+        raise HTTPException(400, "Unsupported file type")
 
     content = await file.read()
 
     if not content:
-        raise HTTPException(400, "Uploaded file is empty")
+        raise HTTPException(400, "Empty file")
 
-    if len(content) > MAX_SIZE_MB * 1024 * 1024:
-        raise HTTPException(413, f"File exceeds {MAX_SIZE_MB} MB limit")
-
-    # Safe filename
-    original_name = file.filename or "prescription.png"
-    safe_name = original_name.replace(" ", "_")
-
-    # Unique filename
-    filename = f"{int(time.time())}_{safe_name}"
+    filename = f"{int(time.time())}_{file.filename.replace(' ', '_')}"
 
     file_path = UPLOADS / filename
 
-    # Save uploaded file
     with open(file_path, "wb") as f:
         f.write(content)
 
-    # OCR
+    # OCR extraction
     text = extract_text(str(file_path))
+
+    print("OCR TEXT:")
+    print(text)
 
     # Parse medicines
     patient, meds = parse_medicines(text)
@@ -136,27 +112,24 @@ async def upload(file: UploadFile = File(...)):
     }
 
     # Save JSON
-    json_path = OUTPUTS / f"{filename}.json"
+    json_file = OUTPUTS / f"{filename}.json"
 
-    with open(json_path, "w") as jf:
+    with open(json_file, "w") as jf:
         json.dump(result, jf, indent=2)
 
+    # JSON shown directly on screen
     return result
 
 
 # ─────────────────────────────
-# History Endpoint
+# History API
 # ─────────────────────────────
-@app.get("/history", tags=["Prescription"])
+@app.get("/history")
 def history():
 
     records = []
 
-    for file in sorted(
-        OUTPUTS.glob("*.json"),
-        key=lambda x: x.stat().st_mtime,
-        reverse=True
-    ):
+    for file in OUTPUTS.glob("*.json"):
         try:
             records.append(json.loads(file.read_text()))
         except Exception:

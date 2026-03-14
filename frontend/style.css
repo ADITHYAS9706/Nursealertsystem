@@ -708,14 +708,15 @@ body {
 .canvas-wrap {
   position: relative;
   background: #fff;
-  background-image: repeating-linear-gradient(transparent, transparent 29px, rgba(100,160,220,0.09) 29px, rgba(100,160,220,0.09) 30px);
-  background-size: 100% 30px;
+  position: relative;
+  background: #ffffff;
 }
-canvas#pad {
-  display: block;
-  width: 100%;
-  height: 420px;
-  cursor: crosshair;
+#pad{
+  width:100%;
+  height:420px;
+  background:white;
+  border:1px solid #ccc;
+  cursor:crosshair;
 }
 .pad-wm {
   position: absolute;

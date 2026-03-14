@@ -1,35 +1,56 @@
-"""
-RxSense — OCR Engine | ocr_engine.py
-Extracts text from prescription images using EasyOCR.
-"""
-
+import cv2
 import easyocr
+import numpy as np
 
-_reader = None  # lazy-load: avoid reload penalty on every request
-
-def _get_reader():
-    global _reader
-    if _reader is None:
-        _reader = easyocr.Reader(['en'], gpu=False, verbose=False)
-    return _reader
+reader = easyocr.Reader(['en'], gpu=False)
 
 
-def extract_text(image_path: str) -> str:
-    """
-    Run OCR and return extracted text sorted top-to-bottom,
-    including only results with confidence > 0.4.
-    """
-    try:
-        reader  = _get_reader()
-        results = reader.readtext(image_path, detail=1, paragraph=False)
+def preprocess_image(path):
 
-        # Sort by vertical position (top of bounding box), then horizontal
-        results_sorted = sorted(results, key=lambda r: (r[0][0][1], r[0][0][0]))
+    img = cv2.imread(path)
 
-        lines = [txt.strip() for (_, txt, prob) in results_sorted if prob > 0.4 and txt.strip()]
-        return "\n".join(lines)
+    if img is None:
+        raise ValueError("Image not found")
 
-    except FileNotFoundError:
-        return "Error: file not found"
-    except Exception as e:
-        return f"OCR Error: {e}"
+    # enlarge image
+    img = cv2.resize(img, None, fx=2, fy=2, interpolation=cv2.INTER_CUBIC)
+
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+    # remove noise
+    gray = cv2.medianBlur(gray, 3)
+
+    # increase contrast
+    gray = cv2.convertScaleAbs(gray, alpha=1.8, beta=20)
+
+    # threshold
+    thresh = cv2.adaptiveThreshold(
+        gray,
+        255,
+        cv2.ADAPTIVE_THRESH_MEAN_C,
+        cv2.THRESH_BINARY,
+        11,
+        2
+    )
+
+    return thresh
+
+
+def extract_text(image_path):
+
+    img = preprocess_image(image_path)
+
+    result = reader.readtext(
+        img,
+        detail=1,
+        paragraph=True
+    )
+
+    lines = []
+
+    for bbox, text, prob in result:
+
+        if prob > 0.25:
+            lines.append(text)
+
+    return "\n".join(lines)
