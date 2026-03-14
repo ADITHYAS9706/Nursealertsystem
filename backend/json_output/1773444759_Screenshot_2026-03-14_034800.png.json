@@ -1,0 +1,5 @@
+{
+  "patient_name": "Ion From Import Corsmiddleware",
+  "extracted_text": "RxSense\nNurse Alert System\nFastAPI\nBackend\nRun:\nuvicorn app:app\n~reload\nfastapi import FastAPI, UploadFile, File, HTTPException\nfrom\nimport CORSMiddleware\n10\nfrom fastapi middleware\ncors\n11\nimport json\n12\nimport time\n13\nfrom pathlib import Path\n14\n15\nfrom ocr_engine import\nextract_\n16\ntext\nparse_medicines\nfrom parser\nimport\n17\ning\nalerts import generate_alerts\n18\nfrom nurs\n19\n20",
+  "alerts": []
+}

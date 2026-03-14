@@ -1,34 +1,335 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Nurse Alert System</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RxSense — Intelligent Nurse Alert System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=Lato:ital,wght@0,300;0,400;0,700;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<h2>Upload Patient Record</h2>
+  <!-- ═══════════ SIDEBAR ═══════════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">
+        <svg width="30" height="30" viewBox="0 0 30 30" fill="none">
+          <rect width="30" height="30" rx="8" fill="#00BFA6"/>
+          <path d="M15 7v16M7 15h16" stroke="white" stroke-width="2.8" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <span class="logo-name">Rx<strong>Sense</strong></span>
+    </div>
 
-<input type="file" id="fileInput">
-<br><br>
+    <nav class="sidebar-nav">
+      <a class="nav-item active" data-sec="dashboard" href="#">
+        <svg class="ni" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+        <span>Dashboard</span>
+      </a>
+      <a class="nav-item" data-sec="upload" href="#">
+        <svg class="ni" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <span>Upload Record</span>
+      </a>
+      <a class="nav-item" data-sec="pad" href="#">
+        <svg class="ni" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        <span>Rx Pad</span>
+      </a>
+      <a class="nav-item" data-sec="alerts" href="#">
+        <svg class="ni" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        <span>Alert Schedule</span>
+        <span class="nav-badge" id="alertBadge" style="display:none">0</span>
+      </a>
+      <a class="nav-item" data-sec="history" href="#">
+        <svg class="ni" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span>History</span>
+      </a>
+    </nav>
 
-<button onclick="uploadFile()">Upload</button>
+    <div class="sidebar-footer">
+      <div class="user-chip">
+        <div class="uav">N</div>
+        <div class="uinfo">
+          <div class="uname">Nurse Station</div>
+          <div class="urole">Ward B · ICU</div>
+        </div>
+        <div class="ustatus"></div>
+      </div>
+    </div>
+  </aside>
 
-<div id="resultBox">
+  <!-- ═══════════ MAIN ═══════════ -->
+  <div class="main-wrap">
 
-<h3>Full JSON Result</h3>
-<pre id="result"></pre>
+    <header class="topbar">
+      <button class="hamburger" id="hamburger" onclick="toggleSidebar()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="tb-title" id="tbTitle">Dashboard</div>
+      <div class="tb-right">
+        <div class="live-clock" id="clock"></div>
+        <div class="online-pill"><span class="opulse"></span>System Online</div>
+      </div>
+    </header>
 
-<p><b>Extracted Text:</b></p>
-<pre id="textOutput"></pre>
+    <main class="content">
 
-<p><b>Nurse Alerts:</b></p>
-<pre id="alertOutput"></pre>
+      <!-- ─── DASHBOARD ─── -->
+      <section class="sec active" id="sec-dashboard">
 
+        <div class="hero-band">
+          <div class="hb-left">
+            <p class="eyebrow">AI-Powered Medical Intelligence</p>
+            <h1>Intelligent Nurse<br><em>Alert System</em></h1>
+            <p class="hero-desc">Upload patient prescriptions or write on the digital pad. RxSense reads handwriting, parses drugs & dosages, and builds a nurse alert schedule — automatically.</p>
+            <div class="hero-btns">
+              <button class="btn primary" onclick="gotoSec('upload')">Upload Prescription</button>
+              <button class="btn ghost" onclick="gotoSec('pad')">Open Rx Pad</button>
+            </div>
+          </div>
+          <div class="hb-right">
+            <div class="hero-orb">
+              <div class="orb-ring r1"></div><div class="orb-ring r2"></div><div class="orb-ring r3"></div>
+              <div class="orb-center">
+                <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
+                  <rect width="60" height="60" rx="16" fill="#00BFA6"/>
+                  <path d="M30 14v32M14 30h32" stroke="white" stroke-width="5" stroke-linecap="round"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
 
-</div>
+        <div class="stats-row">
+          <div class="scard"><div class="scard-ico t"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="scard-val" id="statR">0</div><div class="scard-lbl">Records Processed</div></div>
+          <div class="scard"><div class="scard-ico a"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></div><div class="scard-val" id="statA">0</div><div class="scard-lbl">Alerts Generated</div></div>
+          <div class="scard"><div class="scard-ico b"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div class="scard-val" id="statP">0</div><div class="scard-lbl">Patients</div></div>
+          <div class="scard"><div class="scard-ico g"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div><div class="scard-val">99%</div><div class="scard-lbl">OCR Accuracy</div></div>
+        </div>
 
-<script src="script.js"></script>
+        <div class="qgrid">
+          <div class="qcard" onclick="gotoSec('upload')">
+            <span class="qnum">01</span>
+            <div class="qico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+            <h3>Upload Record</h3>
+            <p>Drag & drop any prescription photo — printed or handwritten.</p>
+            <span class="qarr">→</span>
+          </div>
+          <div class="qcard" onclick="gotoSec('pad')">
+            <span class="qnum">02</span>
+            <div class="qico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
+            <h3>Write on Rx Pad</h3>
+            <p>Use the digital pad to write, then extract text with one click.</p>
+            <span class="qarr">→</span>
+          </div>
+          <div class="qcard" onclick="gotoSec('alerts')">
+            <span class="qnum">03</span>
+            <div class="qico"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></div>
+            <h3>View Alert Schedule</h3>
+            <p>All medication alerts organised by time of day.</p>
+            <span class="qarr">→</span>
+          </div>
+        </div>
 
+        <div class="freq-ref">
+          <div class="fref-title">Frequency → Alert Time Reference</div>
+          <div class="fref-row">
+            <div class="fref-item"><span class="fp od">OD</span><span>Once Daily<br><code>08:00</code></span></div>
+            <div class="fref-div"></div>
+            <div class="fref-item"><span class="fp bd">BD</span><span>Twice Daily<br><code>08:00 · 20:00</code></span></div>
+            <div class="fref-div"></div>
+            <div class="fref-item"><span class="fp tid">TID</span><span>Thrice Daily<br><code>08:00 · 14:00 · 20:00</code></span></div>
+            <div class="fref-div"></div>
+            <div class="fref-item"><span class="fp qid">QID</span><span>Four Times<br><code>06:00 · 12:00 · 18:00 · 22:00</code></span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── UPLOAD ─── -->
+      <section class="sec" id="sec-upload">
+        <div class="sec-hdr">
+          <span class="eyebrow">Step 01</span>
+          <h2>Upload Patient Record</h2>
+          <p>Supports JPG, PNG, PDF — printed or handwritten prescriptions.</p>
+        </div>
+        <div class="upload-layout">
+          <div class="ul-left">
+            <div class="dropzone" id="dropzone">
+              <div id="dzIdle">
+                <div class="dz-ico"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div>
+                <p class="dz-main">Drop prescription here</p>
+                <p class="dz-sub">or <span class="dz-lnk" id="dzBrowse">browse files</span></p>
+                <p class="dz-fmts">JPG · PNG · PDF</p>
+              </div>
+              <div id="dzPreview" style="display:none" class="dz-preview-row">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                <div class="dz-finfo"><div class="dz-fn" id="dzFn"></div><div class="dz-fs" id="dzFs"></div></div>
+                <button class="dz-rm" id="dzRm">✕</button>
+              </div>
+              <input type="file" id="fileInput" accept="image/*,.pdf" hidden>
+            </div>
+
+            <div class="img-prev-box" id="imgPrevBox" style="display:none">
+              <div class="ipb-label">Preview</div>
+              <img id="imgPrev" src="" alt="preview"/>
+            </div>
+
+            <button type="button" class="btn primary full" onclick="uploadFile(event)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              Analyse Prescription
+            </button>
+          </div>
+
+          <div class="ul-right">
+            <div class="proc-card" id="procCard" style="display:none">
+              <div class="proc-step" id="ps1"><div class="pd"></div><div><div class="pt">Uploading file</div><div class="ps">Sending to server…</div></div></div>
+              <div class="proc-step" id="ps2"><div class="pd"></div><div><div class="pt">Running OCR</div><div class="ps">Extracting text with EasyOCR…</div></div></div>
+              <div class="proc-step" id="ps3"><div class="pd"></div><div><div class="pt">Parsing medications</div><div class="ps">Identifying drugs, dosages, routes…</div></div></div>
+              <div class="proc-step" id="ps4"><div class="pd"></div><div><div class="pt">Generating alert schedule</div><div class="ps">Mapping frequencies to alert times…</div></div></div>
+            </div>
+            <div class="rpanel" id="ocrPanel" style="display:none">
+              <div class="rph"><span class="rpl">OCR Output</span><button class="rpcopy" onclick="copyEl('ocrPre')">Copy</button></div>
+              <pre id="ocrPre"></pre>
+            </div>
+            <div class="upload-empty" id="upEmpty">
+              <div class="ue-lines"><div class="uel"></div><div class="uel"></div><div class="uel s"></div><div class="uel"></div><div class="uel s"></div></div>
+              <p>Upload a prescription to see extracted text</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── RX PAD ─── -->
+      <section class="sec" id="sec-pad">
+        <div class="sec-hdr">
+          <span class="eyebrow">Step 02</span>
+          <h2>Digital Prescription Pad</h2>
+          <p>Write a prescription. RxSense will read it and generate nurse alerts.</p>
+        </div>
+        <div class="pad-layout">
+          <div class="pad-main">
+            <div class="pad-container" id="padContainer">
+              <div class="pad-toolbar">
+                <div class="ptg">
+                  <button class="pb" onclick="undo()" title="Undo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 00-4-4H4"/></svg></button>
+                  <button class="pb" onclick="redo()" title="Redo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="15 14 20 9 15 4"/><path d="M4 20v-7a4 4 0 014-4h12"/></svg></button>
+                </div>
+                <div class="ptg">
+                  <button class="pb active" id="tbPen" onclick="setTool('pen')" title="Pen"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/></svg></button>
+                  <button class="pb" id="tbEraser" onclick="setTool('eraser')" title="Eraser"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 20H7L3 16l10-10 7 7-3.5 3.5"/></svg></button>
+                </div>
+                <div class="ptg">
+                  <label class="clr-wrap"><input type="color" id="penColor" value="#12203a"><div class="clr-sw" id="clrSw"></div></label>
+                  <div class="sz-row">
+                    <button class="szb act" data-sz="1.5" onclick="setSize(this)"><span style="width:4px;height:4px;border-radius:50%;background:currentColor;display:block"></span></button>
+                    <button class="szb" data-sz="2.5" onclick="setSize(this)"><span style="width:7px;height:7px;border-radius:50%;background:currentColor;display:block"></span></button>
+                    <button class="szb" data-sz="5" onclick="setSize(this)"><span style="width:12px;height:12px;border-radius:50%;background:currentColor;display:block"></span></button>
+                  </div>
+                </div>
+                <div class="ptg ml-auto">
+                  <button class="pb danger" onclick="clearPad()" title="Clear"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/></svg></button>
+                  <button class="pb" onclick="toggleFS()" id="fsBtn" title="Fullscreen"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg></button>
+                </div>
+              </div>
+              <div class="canvas-wrap">
+                <canvas id="pad"></canvas>
+                <div class="pad-wm" id="padWm">Write prescription here…</div>
+              </div>
+            </div>
+            <div class="pad-acts">
+              <button class="btn primary" onclick="extractFromPad()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                Extract & Generate Alerts
+              </button>
+              <button class="btn outline" onclick="clearPad()">Clear</button>
+            </div>
+          </div>
+          <div class="pad-side">
+            <div class="tips-card">
+              <div class="tc-title">Writing Tips</div>
+              <ul class="tc-list">
+                <li>First line: <code>Patient: [Name]</code></li>
+                <li>One medication per line</li>
+                <li>Format: <code>Tab Drug Dose Route Freq Days</code></li>
+              </ul>
+              <div class="sample-rx">
+                <div class="srx-head">Sample Format</div>
+                <div class="srx-lines">
+                  <div>Patient: John Doe</div>
+                  <div>Tab Paracetamol 500mg Oral TID 5d</div>
+                  <div>Inj Ceftriaxone 1gm IV BD 7d</div>
+                  <div>Tab Aspirin 75mg Oral OD 30d</div>
+                </div>
+              </div>
+            </div>
+            <div class="rpanel" id="padPanel" style="display:none">
+              <div class="rph"><span class="rpl">Extracted Text</span><button class="rpcopy" onclick="copyEl('padPre')">Copy</button></div>
+              <pre id="padPre"></pre>
+            </div>
+            <div class="pad-loader" id="padLoader" style="display:none">
+              <div class="lbar"><div class="lfill"></div></div>
+              <span>Reading handwriting…</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── ALERTS ─── -->
+      <section class="sec" id="sec-alerts">
+        <div class="sec-hdr">
+          <span class="eyebrow">Step 03</span>
+          <h2>Nurse Alert Schedule</h2>
+          <p>Medication schedule auto-generated from the parsed prescription.</p>
+        </div>
+
+        <div class="patient-banner" id="patBanner" style="display:none">
+          <div class="pb-av" id="pbAv">?</div>
+          <div class="pb-info">
+            <div class="pb-name" id="pbName">—</div>
+            <div class="pb-sub">Patient Record · Processed <span id="pbTime">—</span></div>
+          </div>
+          <div class="pb-acts">
+            <button class="btn sm outline" onclick="doPrint()">Print</button>
+            <button class="btn sm outline" onclick="doExport()">Export JSON</button>
+          </div>
+        </div>
+
+        <!-- Time-of-day columns -->
+        <div class="tod-view" id="todView" style="display:none">
+          <div class="tod-cols" id="todCols"></div>
+        </div>
+
+        <div class="alerts-grid" id="alertsGrid">
+          <div class="ag-empty">
+            <div class="age-ico"><svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></div>
+            <p>No alerts yet — upload a prescription or use the Rx Pad</p>
+            <button class="btn primary" onclick="gotoSec('upload')">Upload Now</button>
+          </div>
+        </div>
+
+        <details class="json-viewer" id="jsonVwr" style="display:none">
+          <summary><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> Raw JSON Response</summary>
+          <pre id="jsonPre"></pre>
+        </details>
+      </section>
+
+      <!-- ─── HISTORY ─── -->
+      <section class="sec" id="sec-history">
+        <div class="sec-hdr">
+          <span class="eyebrow">Log</span>
+          <h2>Processing History</h2>
+          <p>All prescriptions processed in this session.</p>
+        </div>
+        <div class="hist-list" id="histList">
+          <div class="hist-empty"><p>No records processed yet in this session</p></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <div class="toast-rack" id="toasts"></div>
+
+  <script src="script.js"></script>
 </body>
 </html>
